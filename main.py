@@ -97,12 +97,16 @@ async def main():
 if __name__ == '__main__':
     import asyncio
 
+    async def start():
+        await main()
+
     try:
-        loop = asyncio.get_event_loop()
-        loop.run_until_complete(main())
-    except RuntimeError as e:
-        # If there's already a running loop (e.g., in Jupyter), fallback
+        asyncio.get_running_loop()
+    except RuntimeError:
+        # No running loop: safe to use asyncio.run
+        asyncio.run(start())
+    else:
+        # Already running loop: fallback for weird edge cases
         import nest_asyncio
         nest_asyncio.apply()
-        loop = asyncio.get_event_loop()
-        loop.run_until_complete(main())
+        asyncio.get_event_loop().create_task(start())
