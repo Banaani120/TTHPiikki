@@ -76,7 +76,7 @@ async def velat_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
     for i, (name, balance) in enumerate(users):
         symbol = medals[i] if i < 3 else f"{i+1}."
         sign = "💀" if balance <= -20 else ""
-        response += f"{symbol} {name} {balance:.2f} € {sign}\n"
+        response += f"{symbol} {name}: {balance:.2f} € {sign}\n"
 
     for chunk in [response[i:i+4000] for i in range(0, len(response), 4000)]:
         await update.message.reply_text(chunk)
