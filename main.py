@@ -42,7 +42,7 @@ async def login_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
 # Handle balance changes like +20 or -5
 async def balance_change_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     chat_id = update.effective_chat.id
-    text = update.message.text.strip()
+    text = update.message.text.replace(" ", "")
 
     if not db.checkIfIDExists(chat_id):
         await update.message.reply_text("Du måste locka in 💅 (/login)")
