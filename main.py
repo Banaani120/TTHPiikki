@@ -52,9 +52,9 @@ async def balance_change_handler(update: Update, context: ContextTypes.DEFAULT_T
         text_clean = text.replace(",", ".")
         amount = float(text_clean)
         new_balance = db.update_balance(chat_id, amount)
-        await update.message.reply_text(f"Saldo {new_balance} €")
+        await update.message.reply_text(f"Saldo {new_balance:.2f} €")
     except ValueError:
-        await update.message.reply_text("Laita vaikka -2 tai +2")
+        await update.message.reply_text("Laita vaikka -1.5 tai +1,5")
 
 
 
@@ -76,7 +76,7 @@ async def velat_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
     for i, (name, balance) in enumerate(users):
         symbol = medals[i] if i < 3 else f"{i+1}."
         sign = "💀" if balance <= -20 else ""
-        response += f"{symbol} {name} {balance} € {sign}\n"
+        response += f"{symbol} {name} {balance:.2f} € {sign}\n"
 
     for chunk in [response[i:i+4000] for i in range(0, len(response), 4000)]:
         await update.message.reply_text(chunk)
