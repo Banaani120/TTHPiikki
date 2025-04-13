@@ -84,29 +84,13 @@ async def velat_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
 
 # Admin:
 
-# Main entry point
-async def main():
-    app = ApplicationBuilder().token(BOT_TOKEN).build()
-
-    app.add_handler(CommandHandler("login", login_command))
-    app.add_handler(CommandHandler("velat", velat_command))
-    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, balance_change_handler))
-
-    print("Bot is running1...")
-    await app.run_polling()
-
-
 
 if __name__ == '__main__':
-   main()
-   """ from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters
-
     app = ApplicationBuilder().token(BOT_TOKEN).build()
 
     app.add_handler(CommandHandler("login", login_command))
     app.add_handler(CommandHandler("velat", velat_command))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, balance_change_handler))
 
-    print("Bot is running2...")
-    app.run_polling()"""
-
+    print("Bot is running...")
+    app.run_polling()
