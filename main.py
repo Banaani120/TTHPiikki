@@ -95,18 +95,14 @@ async def main():
 
 
 if __name__ == '__main__':
-    import asyncio
+    from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters
 
-    async def start():
-        await main()
+    app = ApplicationBuilder().token(BOT_TOKEN).build()
 
-    try:
-        asyncio.get_running_loop()
-    except RuntimeError:
-        # No running loop: safe to use asyncio.run
-        asyncio.run(start())
-    else:
-        # Already running loop: fallback for weird edge cases
-        import nest_asyncio
-        nest_asyncio.apply()
-        asyncio.get_event_loop().create_task(start())
+    app.add_handler(CommandHandler("login", login_command))
+    app.add_handler(CommandHandler("allbalances", all_balances_command))
+    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, balance_change_handler))
+
+    print("Bot is running...")
+    app.run_polling()
+
