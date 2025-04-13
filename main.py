@@ -98,7 +98,8 @@ async def main():
 
 
 if __name__ == '__main__':
-    from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters
+   main()
+   """ from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters
 
     app = ApplicationBuilder().token(BOT_TOKEN).build()
 
@@ -107,5 +108,5 @@ if __name__ == '__main__':
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, balance_change_handler))
 
     print("Bot is running2...")
-    app.run_polling()
+    app.run_polling()"""
 
