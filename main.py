@@ -1,3 +1,4 @@
+
 import db
 from telegram import Update
 from telegram.ext import (
@@ -12,6 +13,7 @@ from telegram.ext import (
 BOT_TOKEN = open('SECRETS.txt', 'r').readline().strip()
 LOGIN_PASSWORD = open('LOGIN_PASSWORD.txt', 'r').readline().strip()
 ADMIN_USERS = [line.strip() for line in open('ADMIN_USERS.txt')]
+
 
 # /login <password> <name>
 async def login_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -36,6 +38,7 @@ async def login_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
         db.addToDb(chat_id, name)
         await update.message.reply_text(f'Logged in as {name}')
 
+
 # Handle balance changes like +20 or -5
 async def balance_change_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     chat_id = update.effective_chat.id
@@ -51,6 +54,7 @@ async def balance_change_handler(update: Update, context: ContextTypes.DEFAULT_T
         await update.message.reply_text(f"Your new balance is {new_balance} €")
     else:
         await update.message.reply_text("Please enter a valid amount like +10 or -5.")
+
 
 # Admin: /allbalances
 async def all_balances_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -76,11 +80,11 @@ async def all_balances_command(update: Update, context: ContextTypes.DEFAULT_TYP
     for chunk in [response[i:i+4000] for i in range(0, len(response), 4000)]:
         await update.message.reply_text(chunk)
 
+
 # Main entry point
 async def main():
     app = ApplicationBuilder().token(BOT_TOKEN).build()
 
-    # Register handlers
     app.add_handler(CommandHandler("login", login_command))
     app.add_handler(CommandHandler("allbalances", all_balances_command))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, balance_change_handler))
@@ -88,6 +92,17 @@ async def main():
     print("Bot is running...")
     await app.run_polling()
 
+
+
 if __name__ == '__main__':
     import asyncio
-    asyncio.run(main())
+
+    try:
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(main())
+    except RuntimeError as e:
+        # If there's already a running loop (e.g., in Jupyter), fallback
+        import nest_asyncio
+        nest_asyncio.apply()
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(main())
