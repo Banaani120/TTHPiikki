@@ -17,7 +17,7 @@ ADMIN_USERS = [line.strip() for line in open('ADMIN_USERS.txt')]
 
 # /login <password> <name>
 async def login_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    chat_id = update.effective_chat.id
+    user_id = update.effective_user.id
     args = update.message.text.split()
 
     if len(args) < 3:
@@ -31,27 +31,27 @@ async def login_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
         await update.message.reply_text('Väärä avain')
         return
 
-    if db.checkIfIDExists(chat_id):
-        db.update_name(chat_id, name)
+    if db.checkIfIDExists(user_id):
+        db.update_name(user_id, name)
         await update.message.reply_text(f'Nimi ja ääni muutettu: {name}')
     else:
-        db.addToDb(chat_id, name)
+        db.addToDb(user_id, name)
         await update.message.reply_text(f'Dokuttelemisiin {name}')
 
 
 # Handle balance changes like +20 or -5
 async def balance_change_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    chat_id = update.effective_chat.id
+    user_id = update.effective_user.id
     text = update.message.text.replace(" ", "")
 
-    if not db.checkIfIDExists(chat_id):
+    if not db.checkIfIDExists(user_id):
         await update.message.reply_text("Du måste locka in 💅 (/login)")
         return
 
     try:
         text_clean = text.replace(",", ".")
         amount = float(text_clean)
-        new_balance = db.update_balance(chat_id, amount)
+        new_balance = db.update_balance(user_id, amount)
         await update.message.reply_text(f"Saldo {new_balance:.2f} €")
     except ValueError:
         await update.message.reply_text("Laita vaikka -1.5 tai +1,5")
@@ -59,9 +59,9 @@ async def balance_change_handler(update: Update, context: ContextTypes.DEFAULT_T
 
 
 async def velat_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    chat_id = str(update.effective_chat.id)
+    user_id = str(update.effective_user.id)
 
-    if not db.checkIfIDExists(chat_id):
+    if not db.checkIfIDExists(user_id):
         await update.message.reply_text("Du måste locka in 💅 (/login)")
         return
 
