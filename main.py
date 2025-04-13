@@ -90,17 +90,11 @@ def main() -> None:
 
     # All users
     dispatcher.add_handler(CommandHandler("login", login_command))
-    dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, balance_change_handler))
-
-    #dispatcher.add_handler(CommandHandler("update", update_command))
 
     # Logged in
-    #dispatcher.add_handler(CommandHandler("iltaa", photo_command))
-    #dispatcher.add_handler(CommandHandler("delete", deletedata_command))
-
+    dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, balance_change_handler))
+   
     # Admin
-    #dispatcher.add_handler(CommandHandler("db", db_command))
-    #dispatcher.add_handler(CommandHandler("log", log_command))
     dispatcher.add_handler(CommandHandler("allbalances", all_balances_command))
 
 

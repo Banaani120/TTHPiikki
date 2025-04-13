@@ -38,7 +38,6 @@ def update_name(chatID, new_name):
     conn.commit()
     cur.close()
 
-
 def update_balance(chat_id, amount):
     conn = sqlite3.connect('piikit.db')
     cur = conn.cursor()
