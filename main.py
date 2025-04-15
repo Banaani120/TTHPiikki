@@ -100,7 +100,7 @@ async def hinnat_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         return
 
     response = "" #header etc.
-    max_len = max(len(name)for name in items)
+    max_len = max(len(name)for name, _ in items)
     for name, price in items:
         gap_filler = '.' * max(1, (max_len + 5) - len(name))
         response += f"{name.capitalize()}{gap_filler} {price:.2f}\n"
