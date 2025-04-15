@@ -99,12 +99,13 @@ async def hinnat_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         await update.message.reply_text("Ei kaljaa :(")
         return
 
-    response = "```" #start monospaced block
+    response = "" #header etc.
+    max_len = max(len(name)for name in items)
     for name, price in items:
-        gap_filler = '.' * max(1, 27 - len(name))
+        gap_filler = '.' * max(1, (max_len + 5) - len(name))
         response += f"{name.capitalize()}{gap_filler} {price:.2f}\n"
-    response += "```" #end monospaced block
-    await update.message.reply_text(response, parse_mode="Markdown")
+    response += "" #end of the list
+    await update.message.reply_text(response)
 
 
 # Admin:
