@@ -96,7 +96,7 @@ async def hinnat_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
 
     items = prices.get_all_prices()
     if not items:
-        await update.message.reply_text("Ei tuotteita.")
+        await update.message.reply_text("Ei kaljaa :(")
         return
 
     response = "📋 HINNASTO 📋\n\n"
@@ -116,11 +116,11 @@ async def muokkaahintoja_command(update: Update, context: ContextTypes.DEFAULT_T
         return
 
     items = prices.get_all_prices()
-    response = "📋 Nykyiset hinnat 📋\n\n"
+    response = "" # \nKirjoita uusi hinnasto muodossa:\ntuote - hinta
     for name, price in items:
         response += f"{name.capitalize()}: {price:.2f} €\n"
 
-    response += "\nKirjoita uusi hinnasto muodossa:\ntuote - hinta"
+    response += ""
     await update.message.reply_text(response)
 
     context.user_data["waiting_for_price_list"] = True
@@ -139,7 +139,7 @@ async def price_edit_handler(update: Update, context: ContextTypes.DEFAULT_TYPE)
     updated_items = []
     errors = []
     prices.clear_all_prices()
-    for line in lines:
+    for index, line in enumerate(lines):
         if "-" not in line:
             errors.append(f"❌ Rivi ilman '-' merkkiä: {line}")
             continue
@@ -149,10 +149,11 @@ async def price_edit_handler(update: Update, context: ContextTypes.DEFAULT_TYPE)
             name = name.strip()
             price = float(price.strip().replace(",", "."))
 
-            prices.set_price(name, price)
+            prices.set_price(name, price, index)
             updated_items.append(f"✅ {name.capitalize()} - {price:.2f} €")
         except Exception:
             errors.append(f"❌ Virhe rivillä: {line}")
+
 
     context.user_data["waiting_for_price_list"] = False
 
@@ -167,7 +168,7 @@ async def price_edit_handler(update: Update, context: ContextTypes.DEFAULT_TYPE)
 
 
 if __name__ == '__main__':
-    prices.init_prices_db()
+    prices.init_prices_db() #only needed once
     app = ApplicationBuilder().token(BOT_TOKEN).build()
 
     app.add_handler(CommandHandler("login", login_command))
