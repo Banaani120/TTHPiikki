@@ -15,43 +15,43 @@ CREATE TABLE IF NOT EXISTS users (
 conn.commit()
 """
 
-def checkIfIDExists(chatID):
+def checkIfIDExists(userID):
   conn = sqlite3.connect('piikit.db')
   cur = conn.cursor()
-  cur.execute("SELECT id FROM users where id = " + str(chatID) + ";")
+  cur.execute("SELECT id FROM users WHERE id = ?", (str(userID),))
   rows = cur.fetchall()
   cur.close()
   return len(rows) == 1
 
-def addToDb(chatID, name):
+def addToDb(userID, name):
   conn = sqlite3.connect('piikit.db')
   cur = conn.cursor()
-  cur.execute("INSERT INTO users (id, name, balance) VALUES (?, ?, 0)", (str(chatID), name))
+  cur.execute("INSERT INTO users (id, name, balance) VALUES (?, ?, 0)", (str(userID), name))
   conn.commit()
   cur.close()
   return
 
-def update_name(chatID, new_name):
+def update_name(userID, new_name):
     conn = sqlite3.connect('piikit.db')
     cur = conn.cursor()
-    cur.execute("UPDATE users SET name = ? WHERE id = ?", (new_name, str(chatID)))
+    cur.execute("UPDATE users SET name = ? WHERE id = ?", (new_name, str(userID)))
     conn.commit()
     cur.close()
 
-def update_balance(chat_id, amount):
+def update_balance(user_id, amount):
     conn = sqlite3.connect('piikit.db')
     cur = conn.cursor()
-    cur.execute("UPDATE users SET balance = balance + ? WHERE id = ?", (amount, str(chat_id)))
+    cur.execute("UPDATE users SET balance = balance + ? WHERE id = ?", (amount, str(user_id)))
     conn.commit()
-    cur.execute("SELECT balance FROM users WHERE id = ?", (str(chat_id),))
+    cur.execute("SELECT balance FROM users WHERE id = ?", (str(user_id),))
     new_balance = cur.fetchone()[0]
     cur.close()
     return new_balance
 
-def get_balance(chat_id):
+def get_balance(user_id):
     conn = sqlite3.connect('piikit.db')
     cur = conn.cursor()
-    cur.execute("SELECT balance FROM users WHERE id = ?", (str(chat_id),))
+    cur.execute("SELECT balance FROM users WHERE id = ?", (str(user_id),))
     row = cur.fetchone()
     cur.close()
     return row[0] if row else None
