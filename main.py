@@ -99,9 +99,10 @@ async def hinnat_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         await update.message.reply_text("Ei kaljaa :(")
         return
 
-    response = "📋 HINNASTO 📋\n\n"
+    response = "" #📋 HINNASTO 📋\n\n
+    dots = '.' * max(1, 20 - len(name))
     for name, price in items:
-        response += f"{name.capitalize()}: {price:.2f} €\n"
+        response += f"{name.capitalize()}{dots} {price:.2f} €\n"
 
     await update.message.reply_text(response)
 
@@ -121,7 +122,7 @@ async def muokkaahintoja_command(update: Update, context: ContextTypes.DEFAULT_T
     else:
         response = ""  
         for name, price in items:
-            response += f"{name.capitalize()}: {price:.2f} €\n"
+            response += f"{name.capitalize()} - {price:.2f} €\n"
 
         response += ""
     await update.message.reply_text(response)
