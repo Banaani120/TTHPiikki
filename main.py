@@ -116,11 +116,14 @@ async def muokkaahintoja_command(update: Update, context: ContextTypes.DEFAULT_T
         return
 
     items = prices.get_all_prices()
-    response = "" # \nKirjoita uusi hinnasto muodossa:\ntuote - hinta
-    for name, price in items:
-        response += f"{name.capitalize()}: {price:.2f} €\n"
+    if not items:
+        response = "\nKirjoita uusi hinnasto muodossa:\ntuote - hinta"
+    else:
+        response = ""  
+        for name, price in items:
+            response += f"{name.capitalize()}: {price:.2f} €\n"
 
-    response += ""
+        response += ""
     await update.message.reply_text(response)
 
     context.user_data["waiting_for_price_list"] = True
