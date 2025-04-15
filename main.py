@@ -136,6 +136,10 @@ async def price_edit_handler(update: Update, context: ContextTypes.DEFAULT_TYPE)
         return
 
     lines = update.message.text.strip().splitlines()
+    if not lines:
+        await update.message.reply_text("Lähetä vähintään yksi rivi muodossa: nimi - hinta")
+        return
+    
     updated_items = []
     errors = []
     prices.clear_all_prices()
@@ -168,7 +172,7 @@ async def price_edit_handler(update: Update, context: ContextTypes.DEFAULT_TYPE)
 
 
 if __name__ == '__main__':
-    prices.init_prices_db() #only needed once
+    #prices.init_prices_db() #only needed once
     app = ApplicationBuilder().token(BOT_TOKEN).build()
 
     app.add_handler(CommandHandler("login", login_command))
