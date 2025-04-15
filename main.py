@@ -100,8 +100,8 @@ async def hinnat_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         return
 
     response = "" #📋 HINNASTO 📋\n\n
-    dots = '.' * max(1, 20 - len(name))
     for name, price in items:
+        dots = '.' * max(1, 20 - len(name))
         response += f"{name.capitalize()}{dots} {price:.2f} €\n"
 
     await update.message.reply_text(response)
