@@ -135,7 +135,7 @@ async def price_edit_handler(update: Update, context: ContextTypes.DEFAULT_TYPE)
     if not context.user_data.get("waiting_for_price_list"):
         return
 
-    lines = update.message.text.strip().splitlines()
+    lines = [line for line in update.message.text.strip().splitlines() if line.strip()]
     if not lines:
         await update.message.reply_text("Lähetä vähintään yksi rivi muodossa: nimi - hinta")
         return
