@@ -117,63 +117,42 @@ async def muokkaahintoja_command(update: Update, context: ContextTypes.DEFAULT_T
         await update.message.reply_text("Isännän hommia 💀")
         return
 
-    items = prices.get_all_prices()
-    if not items:
-        response = "\nKirjoita uusi hinnasto muodossa:\ntuote - hinta"
-    else:
-        response = ""  
-        for name, price in items:
-            response += f"{name.capitalize()} - {price:.2f}\n"
-
-        response += ""
-    await update.message.reply_text(response)
-
-    context.user_data["waiting_for_price_list"] = True
-
-
-async def price_edit_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    user_id = str(update.effective_user.id)
-
-    if user_id not in ADMIN_USERS:
+    if not context.args:
+        await update.message.reply_text("Kirjoita hinnasto muodossa: /muokkaahintoja tuote - hinta\\ntuote - hinta")
         return
 
-    if not context.user_data.get("waiting_for_price_list"):
-        return
+    full_input = " ".join(context.args)
+    lines = [line.strip() for line in full_input.split("\\n") if line.strip()]
 
-    lines = [line for line in update.message.text.strip().splitlines() if line.strip()]
-    if not lines:
-        await update.message.reply_text("Lähetä vähintään yksi rivi muodossa: nimi - hinta")
-        return
-    
     updated_items = []
     errors = []
     prices.clear_all_prices()
+
+    if not lines:
+        await update.message.reply_text("Hinnasto on tyhjä")
+        return
+
     for index, line in enumerate(lines):
         if "-" not in line:
-            errors.append(f"❌ Rivi ilman '-' merkkiä: {line}")
+            errors.append(f"Rivi ilman '-' merkkiä: {line}")
             continue
 
         try:
             name, price = line.split("-", 1)
             name = name.strip()
             price = float(price.strip().replace(",", "."))
-
             prices.set_price(name, price, index)
-            updated_items.append(f"✅ {name.capitalize()} - {price:.2f} €")
+            updated_items.append(f"{name.capitalize()} - {price:.2f} €")
         except Exception:
-            errors.append(f"❌ Virhe rivillä: {line}")
+            errors.append(f"Virhe: {line}")
 
-
-    context.user_data["waiting_for_price_list"] = False
-
-    result_message = "💾 Hinnasto päivitetty:\n\n"
+    result_message = "Hinnasto päivitetty:\n\n"
     result_message += "\n".join(updated_items) if updated_items else "Ei onnistuneita päivityksiä."
 
     if errors:
-        result_message += "\n\n⚠️ Virheet:\n" + "\n".join(errors)
+        result_message += "\n\nVirheet:\n" + "\n".join(errors)
 
     await update.message.reply_text(result_message)
-
 
 
 if __name__ == '__main__':
@@ -185,7 +164,6 @@ if __name__ == '__main__':
     app.add_handler(CommandHandler("hinnat", hinnat_command))
     app.add_handler(CommandHandler("muokkaahintoja", muokkaahintoja_command))
 
-    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, price_edit_handler))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, balance_change_handler))
 
     print("Bot is running...")
