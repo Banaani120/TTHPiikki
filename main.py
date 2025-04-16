@@ -2,6 +2,7 @@
 import db
 import prices
 from telegram import Update
+from telegram.constants import ParseMode
 from telegram.ext import (
     ApplicationBuilder,
     CommandHandler,
@@ -99,13 +100,13 @@ async def hinnat_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         await update.message.reply_text("Ei kaljaa :(")
         return
 
-    response = "" #header etc.
+    response = "<pre>" #header etc.
     max_len = max(len(name)for name, _ in items)
     for name, price in items:
         gap_filler = '.' * max(1, (max_len + 5) - len(name))
         response += f"{name.capitalize()}{gap_filler} {price:.2f}\n"
-    response += "" #end of the list
-    await update.message.reply_text(response)
+    response += "</pre>" #end of the list
+    await update.message.reply_text(response, parse_mode=ParseMode.HTML)
 
 
 # Admin:
