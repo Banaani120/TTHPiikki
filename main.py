@@ -116,21 +116,17 @@ async def muokkaahintoja_command(update: Update, context: ContextTypes.DEFAULT_T
     if user_id not in ADMIN_USERS:
         await update.message.reply_text("Isännän hommia 💀")
         return
-
-    if not context.args:
-        await update.message.reply_text("Kirjoita hinnasto muodossa: /muokkaahintoja tuote - hinta\\ntuote - hinta")
+    
+    full_input = update.message.text.partition("\n")[2].strip()
+    
+    prices.clear_all_prices()
+    if not full_input:
+        await update.message.reply_text("Tyhjä viesti, hinnasto tyhjennetty")
         return
-
-    full_input = " ".join(context.args)
-    lines = [line.strip() for line in full_input.split("\n") if line.strip()]
-
+    
+    lines = [line.strip() for line in full_input.splitlines() if line.strip()]
     updated_items = []
     errors = []
-    prices.clear_all_prices()
-
-    if not lines:
-        await update.message.reply_text("Hinnasto on tyhjä")
-        return
 
     for index, line in enumerate(lines):
         if "-" not in line:
