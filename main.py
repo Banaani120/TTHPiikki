@@ -122,7 +122,7 @@ async def muokkaahintoja_command(update: Update, context: ContextTypes.DEFAULT_T
         return
 
     full_input = " ".join(context.args)
-    lines = [line.strip() for line in full_input.split("\\n") if line.strip()]
+    lines = [line.strip() for line in full_input.split("\n") if line.strip()]
 
     updated_items = []
     errors = []
