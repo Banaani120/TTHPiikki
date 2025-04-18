@@ -1,5 +1,6 @@
 
 import db
+from datetime import datetime
 import prices
 from telegram import Update
 from telegram.constants import ParseMode
@@ -10,6 +11,10 @@ from telegram.ext import (
     ContextTypes,
     filters,
 )
+
+TRESHOLD_TIME = 3
+BEER_AMMOUNT = 3
+beer_intensity={}
 
 # Load secrets and config
 BOT_TOKEN = open('SECRETS.txt', 'r').readline().strip()
@@ -49,16 +54,24 @@ async def balance_change_handler(update: Update, context: ContextTypes.DEFAULT_T
     if not db.checkIfIDExists(user_id):
         await update.message.reply_text("Du måste locka in 💅 (/login)")
         return
-    
-    if context.user_data.get("waiting_for_price_list"):
-        return  # Let price_edit_handler handle it
 
     try:
         text_clean = text.replace(",", ".")
         amount = float(text_clean)
         new_balance = db.update_balance(user_id, amount)
         await update.message.reply_text(f"Saldo {new_balance:.2f} €")
-    except ValueError:
+
+        if amount == 1.5:
+            if user_id not in beer_intensity:
+                beer_intensity[user_id] = [1,datetime.datetime.now()]
+            else:
+                counter = beer_intensity[user_id][0]
+                if datetime.datetime.now() - beer_intensity[user_id][1] < TRESHOLD_TIME:
+                    counter += 1
+                    if counter >= 3:
+                        print("juoppo")
+
+    except ValueError: 
         await update.message.reply_text("Laita vaikka -1.5 tai +1,5")
 
 
