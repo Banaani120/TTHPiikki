@@ -61,12 +61,12 @@ async def balance_change_handler(update: Update, context: ContextTypes.DEFAULT_T
         new_balance = db.update_balance(user_id, amount)
         await update.message.reply_text(f"Saldo {new_balance:.2f} €")
 
-        if amount == 1.5:
+        if amount == -1.5:
             if user_id not in beer_intensity:
-                beer_intensity[user_id] = [1,datetime.datetime.now()]
+                beer_intensity[user_id] = [1,datetime.now()]
             else:
                 counter = beer_intensity[user_id][0]
-                if datetime.datetime.now() - beer_intensity[user_id][1] < TRESHOLD_TIME:
+                if datetime.now() - beer_intensity[user_id][1] < TRESHOLD_TIME:
                     counter += 1
                     if counter >= 3:
                         print("juoppo")
