@@ -66,7 +66,7 @@ async def balance_change_handler(update: Update, context: ContextTypes.DEFAULT_T
                 beer_intensity[user_id] = [1,datetime.now()]
             else:
                 counter = beer_intensity[user_id][0]
-                if datetime.now() - beer_intensity[user_id][1] < TRESHOLD_TIME:
+                if int(datetime.now()) - int(beer_intensity[user_id][1]) < TRESHOLD_TIME:
                     counter += 1
                     if counter >= 3:
                         print("juoppo")
