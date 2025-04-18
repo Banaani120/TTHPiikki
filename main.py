@@ -12,8 +12,8 @@ from telegram.ext import (
     filters,
 )
 
-TRESHOLD_TIME = 3*3600
-BEER_AMMOUNT = 3
+TRESHOLD_TIME = 3*3600 # TODO: Adjust
+BEER_AMMOUNT = 3 # TODO: Adjust
 beer_intensity={}
 
 # Load secrets and config
@@ -60,8 +60,10 @@ async def balance_change_handler(update: Update, context: ContextTypes.DEFAULT_T
         amount = float(text_clean)
         new_balance = db.update_balance(user_id, amount)
         await update.message.reply_text(f"Saldo {new_balance:.2f} €")
-
-        if amount == -1.5:
+    except ValueError: 
+        await update.message.reply_text("Laita vaikka -1.5 tai +1,5")
+"""
+        if amount == -1.5: # TODO: Implement differently, add each beer to list and delete the oldest one, then compare those. 
             if user_id not in beer_intensity:
                 beer_intensity[user_id] = [1, datetime.now().timestamp()]
             else:
@@ -71,9 +73,10 @@ async def balance_change_handler(update: Update, context: ContextTypes.DEFAULT_T
                     if beer_intensity[user_id][0] >= 3:
                         print("juoppo")
                         await update.message.reply_sticker(sticker = 'CAACAgQAAxkBAAIDWGgC06w5K0ZklEm_4dyhjdchj2TeAALpBAACJs3kCX1gyAmIc7RPNgQ')
-
-    except ValueError: 
-        await update.message.reply_text("Laita vaikka -1.5 tai +1,5")
+                    # TODO: Catch error if sticker id expired. Add  
+                              
+"""
+    
 
 
 
