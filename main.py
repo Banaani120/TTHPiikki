@@ -70,7 +70,7 @@ async def balance_change_handler(update: Update, context: ContextTypes.DEFAULT_T
                     beer_intensity[user_id][0] += 1
                     if beer_intensity[user_id][0] >= 3:
                         print("juoppo")
-                        await update.message.reply_sticker(id=)
+                        #await update.message.reply_sticker(id=)
 
     except ValueError: 
         await update.message.reply_text("Laita vaikka -1.5 tai +1,5")
