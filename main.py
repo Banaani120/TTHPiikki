@@ -70,15 +70,10 @@ async def balance_change_handler(update: Update, context: ContextTypes.DEFAULT_T
                     beer_intensity[user_id][0] += 1
                     if beer_intensity[user_id][0] >= 3:
                         print("juoppo")
-                        #await update.message.reply_sticker(id=)
+                        await update.message.reply_sticker(id='CAACAgQAAxkBAAIDWGgC06w5K0ZklEm_4dyhjdchj2TeAALpBAACJs3kCX1gyAmIc7RPNgQ')
 
     except ValueError: 
         await update.message.reply_text("Laita vaikka -1.5 tai +1,5")
-
-
-async def sticker_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    sticker = update.message.sticker
-    await update.message.reply_text(f"Sticker ID:\n{sticker.file_id}")
 
 
 
@@ -179,8 +174,6 @@ if __name__ == '__main__':
     app.add_handler(CommandHandler("velat", velat_command))
     app.add_handler(CommandHandler("hinnat", hinnat_command))
     app.add_handler(CommandHandler("muokkaahintoja", muokkaahintoja_command))
-
-    app.add_handler(MessageHandler(filters.Sticker.ALL, sticker_handler))
 
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, balance_change_handler))
 
