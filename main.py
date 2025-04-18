@@ -12,7 +12,7 @@ from telegram.ext import (
     filters,
 )
 
-TRESHOLD_TIME = 3
+TRESHOLD_TIME = 3*3600
 BEER_AMMOUNT = 3
 beer_intensity={}
 
@@ -63,10 +63,10 @@ async def balance_change_handler(update: Update, context: ContextTypes.DEFAULT_T
 
         if amount == -1.5:
             if user_id not in beer_intensity:
-                beer_intensity[user_id] = [1,datetime.now()]
+                beer_intensity[user_id] = [1,datetime.now().timestamp()]
             else:
                 counter = beer_intensity[user_id][0]
-                if int(datetime.now()) - int(beer_intensity[user_id][1]) < TRESHOLD_TIME:
+                if datetime.now().timestamp() - beer_intensity[user_id][1] < TRESHOLD_TIME:
                     counter += 1
                     if counter >= 3:
                         print("juoppo")
