@@ -72,7 +72,10 @@ async def balance_change_handler(update: Update, context: ContextTypes.DEFAULT_T
                 print("Juoppo")
                 del beer_intensity[user_id][:]
                 await update.message.reply_sticker(sticker = 'CAACAgQAAxkBAAIDWGgC06w5K0ZklEm_4dyhjdchj2TeAALpBAACJs3kCX1gyAmIc7RPNgQ')
-                # TODO: Catch error if sticker id expired. Add  
+                # TODO: Catch error if sticker id expired.
+            else:
+                beer_intensity[user_id].append((datetime.now().timestamp()))
+                del beer_intensity[user_id][0]
                               
     except ValueError: 
         await update.message.reply_text("Laita vaikka -1.5 tai +1,5")
