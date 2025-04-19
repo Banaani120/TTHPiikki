@@ -60,22 +60,20 @@ async def balance_change_handler(update: Update, context: ContextTypes.DEFAULT_T
         amount = float(text_clean)
         new_balance = db.update_balance(user_id, amount)
         await update.message.reply_text(f"Saldo {new_balance:.2f} €")
-    except ValueError: 
-        await update.message.reply_text("Laita vaikka -1.5 tai +1,5")
-"""
-        if amount == -1.5: # TODO: Implement differently, add each beer to list and delete the oldest one, then compare those. 
+    
+        if amount == -1.5:
             if user_id not in beer_intensity:
-                beer_intensity[user_id] = [1, datetime.now().timestamp()]
-            else:
-                if datetime.now().timestamp() - beer_intensity[user_id][1] <= TRESHOLD_TIME:
-                    print("MENI")
-                    beer_intensity[user_id][0] += 1
-                    if beer_intensity[user_id][0] >= 3:
-                        print("juoppo")
-                        await update.message.reply_sticker(sticker = 'CAACAgQAAxkBAAIDWGgC06w5K0ZklEm_4dyhjdchj2TeAALpBAACJs3kCX1gyAmIc7RPNgQ')
+                beer_intensity[user_id] = [(datetime.now().timestamp())]
+
+            elif len(beer_intensity[user_id]) < BEER_AMMOUNT:
+                beer_intensity[user_id].append((datetime.now().timestamp()))
+                if datetime.now().timestamp() - beer_intensity[user_id][0] <= TRESHOLD_TIME:
+                    print("Juoppo")
+                    await update.message.reply_sticker(sticker = 'CAACAgQAAxkBAAIDWGgC06w5K0ZklEm_4dyhjdchj2TeAALpBAACJs3kCX1gyAmIc7RPNgQ')
                     # TODO: Catch error if sticker id expired. Add  
                               
-"""
+    except ValueError: 
+        await update.message.reply_text("Laita vaikka -1.5 tai +1,5")
     
 
 
